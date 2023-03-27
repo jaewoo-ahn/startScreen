@@ -68,3 +68,55 @@ function onClickRegist() {
   quotesMsg.innerHTML = `<div>${newQuotesInput.value}</div>`;
   newQuotes.style.display = "none";
 }
+
+let isLoading = false;
+
+async function onClickSearch() {
+  const searchInput = document.querySelector(".searchInput");
+  const searchResult = document.querySelector(".searchResult");
+
+  if (!searchInput.value) {
+    return alert("질문을 입력해주세요.");
+  }
+  if (isLoading) return;
+
+  isLoading = true;
+
+  const question = searchInput.value;
+
+  //검색 중 입니다... 잠시만 기다려주세요.
+  searchInput.value = "검색 중 입니다... 잠시만 기다려주세요. ";
+
+  const response = await axios.post(
+    "https://holy-fire-2749.fly.dev/chat",
+    {
+      question,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer BLOCKCHAINSCHOOL3",
+      },
+    }
+  );
+
+  if (response.status === 200) {
+    searchResult.style.display = "inline";
+    searchResult.innerText = response.data.choices[0].message.content;
+  }
+  searchInput.value = "";
+  isLoading = false;
+}
+
+function onClickToggle(value) {
+  const nft = document.querySelector(".nft");
+  const nftView = document.querySelector(".nftView");
+
+  if (value) {
+    nft.style.display = "inline-block";
+    nftView.style.display = "none";
+  } else {
+    nft.style.display = "none";
+    nftView.style.display = "inline-block";
+  }
+}
